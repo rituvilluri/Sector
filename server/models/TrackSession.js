@@ -6,11 +6,14 @@ const TRACKS = [
   'Watkins Glen',
   'Circuit of the Americas',
   'Lime Rock Park',
-  'VIRginia International Raceway',
+  'Virginia International Raceway',
   'Sonoma Raceway',
   'Sebring International Raceway',
   'Mid-Ohio Sports Car Course',
   'Barber Motorsports Park',
+  'Eagles Canyon Raceway',
+  'Motorsport Ranch 3.1 Mile',
+  'Motorsport Ranch 1.7 Mile',
 ];
 
 const trackSessionSchema = new mongoose.Schema({
@@ -23,6 +26,10 @@ const trackSessionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Car',
     required: [true, 'Car is required'],
+  },
+  carLabel: {
+    type: String,
+    trim: true,
   },
   track: {
     type: String,
@@ -44,13 +51,37 @@ const trackSessionSchema = new mongoose.Schema({
       message: 'bestLap must be in format M:SS.mmm (e.g. 1:23.456)',
     },
   },
+  avgLap: {
+    type: String,
+    trim: true,
+  },
   totalLaps: {
     type: Number,
     min: 1,
   },
+  laps: {
+    type: [String],
+    default: [],
+  },
+  sectors: {
+    type: [String],
+    default: [],
+  },
+  duration: {
+    type: String,
+    trim: true,
+  },
+  weather: {
+    type: String,
+    trim: true,
+  },
+  tireSet: {
+    type: String,
+    trim: true,
+  },
   conditions: {
     type: String,
-    enum: ['Dry', 'Wet', 'Damp'],
+    enum: { values: ['Dry', 'Wet', 'Damp'], message: 'Conditions must be Dry, Wet, or Damp' },
   },
   notes: {
     type: String,
@@ -63,7 +94,6 @@ const trackSessionSchema = new mongoose.Schema({
   },
 });
 
-// Single source of truth — routes import this for express-validator isIn() checks
 trackSessionSchema.statics.TRACKS = TRACKS;
 
 module.exports = mongoose.model('TrackSession', trackSessionSchema);

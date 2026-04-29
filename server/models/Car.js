@@ -26,8 +26,42 @@ const carSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  nickname: {
+    type: String,
+    trim: true,
+  },
+  plate: {
+    type: String,
+    trim: true,
+  },
+  odo: {
+    type: String,
+    trim: true,
+  },
+  bestLap: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: (v) => !v || /^\d+:\d{2}\.\d{3}$/.test(v),
+      message: 'bestLap must be in format M:SS.mmm',
+    },
+  },
+  bestTrack: {
+    type: String,
+    trim: true,
+  },
   photo: {
     type: String,
+  },
+  photoPosition: {
+    type: String,
+    default: '50% 50%',
+  },
+  photoScale: {
+    type: Number,
+    default: 1,
+    min: 1,
+    max: 4,
   },
   mods: {
     type: [String],
