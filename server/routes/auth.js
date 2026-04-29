@@ -3,8 +3,10 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 
-const User = require('../models/User');
-const requireAuth = require('../middleware/requireAuth');
+const User         = require('../models/User');
+const Car          = require('../models/Car');
+const TrackSession = require('../models/TrackSession');
+const requireAuth  = require('../middleware/requireAuth');
 
 const router = express.Router();
 const SALT_ROUNDS = 12;
@@ -81,6 +83,52 @@ router.post('/logout', (req, res, next) => {
 // GET /api/auth/me  (protected)
 router.get('/me', requireAuth, (req, res) => {
   res.json({ user: req.user });
+});
+
+// PUT /api/auth/profile
+router.put(
+  '/profile',
+  requireAuth,
+  [
+    body('name').optional().trim().notEmpty().withMessage('Name cannot be blank'),
+    body('phone').optional().trim(),
+  ],
+  async (req, res) => {
+    const validationError = handleValidation(req, res);
+    if (validationError !== null) return;
+
+    try {
+      const { name, phone } = req.body;
+      if (name !== undefined) req.user.name = name;
+      if (phone !== undefined) req.user.phone = phone;
+      await req.user.save();
+      const { password: _pw, ...safeUser } = req.user.toObject();
+      res.json({ user: safeUser });
+    } catch (err) {
+      console.error('PUT /profile error:', err);
+      res.status(500).json({ message: 'Server error.' });
+    }
+  }
+);
+
+// DELETE /api/auth/account
+router.delete('/account', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    await TrackSession.deleteMany({ driver: userId });
+    await Car.deleteMany({ owner: userId });
+    await User.findByIdAndDelete(userId);
+    req.logout((err) => {
+      if (err) console.error('Logout error after deletion:', err);
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Account deleted.' });
+      });
+    });
+  } catch (err) {
+    console.error('DELETE /account error:', err);
+    res.status(500).json({ message: 'Server error.' });
+  }
 });
 
 // GET /api/auth/google
