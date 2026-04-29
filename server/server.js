@@ -5,6 +5,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const connectDB = require('./config/db');
 const passport = require('./config/passport');
@@ -61,18 +62,27 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/sessions', sessionRoutes);
 
-// 7. 404
+// 7. Serve the React SPA in production
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = path.join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientDist));
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
+
+// 8. 404
 app.use((_req, res) => {
   res.status(404).json({ message: 'Route not found.' });
 });
 
-// 8. Global error handler (4 params — Express identifies error handlers by arity)
+// 9. Global error handler (4 params — Express identifies error handlers by arity)
 app.use((err, _req, res, _next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ message: 'An unexpected error occurred.' });
 });
 
-// 9. Start
+// 10. Start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Sector API running on port ${PORT} [${process.env.NODE_ENV}]`);

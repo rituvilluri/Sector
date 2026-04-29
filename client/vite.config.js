@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'assets/track-dusk.jpeg'],
+      includeAssets: ['favicon.svg', 'assets/track-bg.jpeg'],
       manifest: {
         name: 'SECTOR — Session Logbook',
         short_name: 'SECTOR',
