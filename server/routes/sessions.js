@@ -2,7 +2,14 @@ const express = require('express');
 const { body, param, validationResult } = require('express-validator');
 
 const TrackSession = require('../models/TrackSession');
+const Car = require('../models/Car');
 const requireAuth = require('../middleware/requireAuth');
+
+const lapToSeconds = (t) => {
+  if (!t) return Infinity;
+  const [m, s] = t.split(':');
+  return parseInt(m, 10) * 60 + parseFloat(s);
+};
 
 const router = express.Router();
 
@@ -16,11 +23,17 @@ const handleValidation = (req, res) => {
   return null;
 };
 
+const SESSION_FIELDS = [
+  'car', 'carLabel', 'track', 'date', 'bestLap', 'avgLap',
+  'totalLaps', 'laps', 'sectors', 'duration', 'weather',
+  'tireSet', 'conditions', 'notes',
+];
+
 // GET /api/sessions
 router.get('/', async (req, res) => {
   try {
     const sessions = await TrackSession.find({ driver: req.user._id })
-      .populate('car', 'make model year color')
+      .populate('car', 'make model year color nickname')
       .sort({ date: -1 });
     res.json({ sessions });
   } catch (err) {
@@ -40,7 +53,7 @@ router.get(
     try {
       const session = await TrackSession.findById(req.params.id).populate(
         'car',
-        'make model year color'
+        'make model year color nickname'
       );
       if (!session) return res.status(404).json({ message: 'Session not found.' });
       if (session.driver.toString() !== req.user._id.toString()) {
@@ -69,10 +82,9 @@ router.post(
       .matches(/^\d+:\d{2}\.\d{3}$/)
       .withMessage('bestLap must be in format M:SS.mmm (e.g. 1:23.456)'),
     body('totalLaps').optional().isInt({ min: 1 }).withMessage('totalLaps must be a positive integer'),
-    body('conditions')
-      .optional()
-      .isIn(['Dry', 'Wet', 'Damp'])
-      .withMessage('Conditions must be Dry, Wet, or Damp'),
+    body('laps').optional().isArray().withMessage('laps must be an array'),
+    body('sectors').optional().isArray().withMessage('sectors must be an array'),
+    body('conditions').optional().isIn(['Dry', 'Wet', 'Damp']).withMessage('Conditions must be Dry, Wet, or Damp'),
     body('notes').optional().trim().isLength({ max: 2000 }),
   ],
   async (req, res) => {
@@ -80,17 +92,23 @@ router.post(
     if (validationError !== null) return;
 
     try {
-      const { car, track, date, bestLap, totalLaps, conditions, notes } = req.body;
-      const trackSession = await TrackSession.create({
-        driver: req.user._id,
-        car,
-        track,
-        date,
-        bestLap,
-        totalLaps,
-        conditions,
-        notes,
-      });
+      const data = {};
+      SESSION_FIELDS.forEach((f) => { if (req.body[f] !== undefined) data[f] = req.body[f]; });
+      data.driver = req.user._id;
+
+      const trackSession = await TrackSession.create(data);
+      await trackSession.populate('car', 'make model year color nickname');
+
+      // Update car's bestLap/bestTrack if this session set a new personal best
+      if (data.car && data.bestLap) {
+        const car = await Car.findById(data.car);
+        if (car && lapToSeconds(data.bestLap) < lapToSeconds(car.bestLap)) {
+          car.bestLap = data.bestLap;
+          car.bestTrack = data.track;
+          await car.save();
+        }
+      }
+
       res.status(201).json({ session: trackSession });
     } catch (err) {
       console.error('POST /sessions error:', err);
@@ -106,11 +124,10 @@ router.put(
     param('id').isMongoId().withMessage('Invalid session ID'),
     body('track').optional().isIn(TrackSession.TRACKS).withMessage('Invalid track'),
     body('date').optional().isISO8601().withMessage('Valid ISO date required'),
-    body('bestLap')
-      .optional()
-      .matches(/^\d+:\d{2}\.\d{3}$/)
-      .withMessage('bestLap must be in format M:SS.mmm'),
+    body('bestLap').optional().matches(/^\d+:\d{2}\.\d{3}$/).withMessage('bestLap must be in format M:SS.mmm'),
     body('totalLaps').optional().isInt({ min: 1 }),
+    body('laps').optional().isArray(),
+    body('sectors').optional().isArray(),
     body('conditions').optional().isIn(['Dry', 'Wet', 'Damp']),
     body('notes').optional().trim().isLength({ max: 2000 }),
   ],
@@ -124,11 +141,11 @@ router.put(
       if (session.driver.toString() !== req.user._id.toString()) {
         return res.status(403).json({ message: 'Forbidden.' });
       }
-      const allowed = ['track', 'date', 'bestLap', 'totalLaps', 'conditions', 'notes'];
-      allowed.forEach((field) => {
+      SESSION_FIELDS.forEach((field) => {
         if (req.body[field] !== undefined) session[field] = req.body[field];
       });
       await session.save();
+      await session.populate('car', 'make model year color nickname');
       res.json({ session });
     } catch (err) {
       console.error('PUT /sessions/:id error:', err);
