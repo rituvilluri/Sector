@@ -37,7 +37,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongooseConnection: mongoose.connection,
+      clientPromise: mongoose.connection
+        .asPromise()
+        .then((conn) => conn.getClient()),
       ttl: 7 * 24 * 60 * 60,
       autoRemove: 'native',
     }),
