@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
   },
+  phone: {
+    type: String,
+    trim: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
