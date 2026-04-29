@@ -19,7 +19,10 @@ const app = express();
 // 1. Database
 connectDB();
 
-// 2. CORS — before session so preflight OPTIONS requests get the header
+// 2. Railway terminates HTTPS before forwarding requests to Express.
+app.set('trust proxy', 1);
+
+// 3. CORS — before session so preflight OPTIONS requests get the header
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -27,11 +30,11 @@ app.use(
   })
 );
 
-// 3. Body parsers
+// 4. Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 4. Session — stored in MongoDB via connect-mongo
+// 5. Session — stored in MongoDB via connect-mongo
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -53,16 +56,16 @@ app.use(
   })
 );
 
-// 5. Passport (must come after session)
+// 6. Passport (must come after session)
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 6. Routes
+// 7. Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/sessions', sessionRoutes);
 
-// 7. Serve the React SPA in production
+// 8. Serve the React SPA in production
 if (process.env.NODE_ENV === 'production') {
   const clientDist = path.join(__dirname, '..', 'client', 'dist');
   app.use(express.static(clientDist));
@@ -71,18 +74,18 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// 8. 404
+// 9. 404
 app.use((_req, res) => {
   res.status(404).json({ message: 'Route not found.' });
 });
 
-// 9. Global error handler (4 params — Express identifies error handlers by arity)
+// 10. Global error handler (4 params — Express identifies error handlers by arity)
 app.use((err, _req, res, _next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ message: 'An unexpected error occurred.' });
 });
 
-// 10. Start
+// 11. Start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Sector API running on port ${PORT} [${process.env.NODE_ENV}]`);
