@@ -1,0 +1,128 @@
+// ─── SECTOR Design Tokens ────────────────────────────────────────────────────
+// These override Bootstrap 5 variables AND power the custom SECTOR theme.
+// Imported before Bootstrap so Bootstrap's theming picks them up.
+
+// Color palette — Midnight Gold (default)
+$sector-bg:           #0E0E0E;
+$sector-surface:      #1A1A1A;
+$sector-surface-2:    #141414;
+$sector-border:       #2A2A2A;
+$sector-border-strong:#3A3A3A;
+$sector-gold:         #D4A843;
+$sector-gold-soft:    #B8902F;
+$sector-gold-glow:    rgba(212, 168, 67, 0.18);
+$sector-ivory:        #F5F0EB;
+$sector-muted:        #888888;
+$sector-muted-2:      #5A5A5A;
+$sector-danger:       #C0392B;
+$sector-green:        #6FA76F;
+
+// ─── Bootstrap 5 variable overrides ─────────────────────────────────────────
+// Map SECTOR colors into Bootstrap's system
+
+$body-bg:                   $sector-bg;
+$body-color:                $sector-ivory;
+
+$primary:                   $sector-gold;
+$secondary:                 $sector-muted;
+$success:                   $sector-green;
+$danger:                    $sector-danger;
+$dark:                      $sector-surface;
+$light:                     $sector-ivory;
+
+$border-color:              $sector-border;
+$border-radius:             0;
+$border-radius-sm:          0;
+$border-radius-lg:          0;
+$border-radius-pill:        0;
+
+$card-bg:                   $sector-surface;
+$card-border-color:         $sector-border;
+$card-color:                $sector-ivory;
+$card-border-radius:        0;
+
+$input-bg:                  transparent;
+$input-color:               $sector-ivory;
+$input-border-color:        $sector-border;
+$input-focus-border-color:  $sector-gold;
+$input-focus-box-shadow:    none;
+$input-placeholder-color:   $sector-muted-2;
+$input-border-radius:       0;
+$input-border-radius-sm:    0;
+$input-border-radius-lg:    0;
+
+$form-select-bg:            $sector-surface;
+$form-select-color:         $sector-ivory;
+$form-select-border-color:  $sector-border;
+$form-select-border-radius: 0;
+$form-select-focus-box-shadow: none;
+
+$btn-border-radius:         0;
+$btn-border-radius-sm:      0;
+$btn-border-radius-lg:      0;
+$btn-focus-box-shadow:      none;
+$btn-active-box-shadow:     none;
+
+$nav-link-color:            $sector-muted;
+$nav-link-hover-color:      $sector-ivory;
+
+$modal-content-bg:          $sector-surface;
+$modal-content-border-color:$sector-border;
+$modal-backdrop-bg:         #000;
+$modal-backdrop-opacity:    0.7;
+$modal-border-radius:       0;
+$modal-content-border-radius: 0;
+
+$dropdown-bg:               $sector-surface;
+$dropdown-border-color:     $sector-border;
+$dropdown-link-color:       $sector-ivory;
+$dropdown-link-hover-bg:    $sector-surface-2;
+$dropdown-border-radius:    0;
+
+$tooltip-bg:                $sector-surface;
+$tooltip-color:             $sector-ivory;
+
+$table-color:               $sector-ivory;
+$table-bg:                  transparent;
+$table-border-color:        $sector-border;
+$table-striped-bg:          rgba(255,255,255,0.02);
+$table-hover-bg:            rgba(212, 168, 67, 0.04);
+
+$link-color:                $sector-gold;
+$link-hover-color:          #e1b75a; // $sector-gold lightened 10%
+$link-decoration:           none;
+
+$font-family-sans-serif:    'Inter', system-ui, -apple-system, sans-serif;
+$font-family-monospace:     'JetBrains Mono', ui-monospace, monospace;
+$font-size-base:            0.9375rem; // 15px
+$font-weight-normal:        400;
+$line-height-base:          1.5;
+
+$headings-font-weight:      400;
+$headings-color:            $sector-ivory;
+
+$spacer:                    1rem;
+
+$enable-shadows:            false;
+$enable-gradients:          false;
+$enable-rounded:            false;
+$enable-smooth-scroll:      true;
+$enable-negative-margins:   true;
+
+// CSS custom properties (used at runtime for theme switching)
+:root {
+  --bg:           #{$sector-bg};
+  --surface:      #{$sector-surface};
+  --surface-2:    #{$sector-surface-2};
+  --border:       #{$sector-border};
+  --border-strong:#{$sector-border-strong};
+  --gold:         #{$sector-gold};
+  --gold-soft:    #{$sector-gold-soft};
+  --gold-glow:    #{$sector-gold-glow};
+  --ivory:        #{$sector-ivory};
+  --muted:        #{$sector-muted};
+  --muted-2:      #{$sector-muted-2};
+  --danger:       #{$sector-danger};
+  --green:        #{$sector-green};
+  --main-pad:     48px 56px 80px;
+}

@@ -1,0 +1,34 @@
+// ─── SECTOR — main stylesheet ─────────────────────────────────────────────────
+// Uses @import throughout (Bootstrap 5 source is @import-based).
+// Order: variables first so Bootstrap picks up our overrides, then Bootstrap,
+// then our custom layers which can reference Bootstrap mixins/variables.
+
+// 1. SECTOR design tokens + Bootstrap variable overrides (must be first)
+@import 'variables';
+
+// 2. Bootstrap 5 — selected modules only (keeps bundle lean)
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/forms';
+@import 'bootstrap/scss/buttons';
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/modal';
+@import 'bootstrap/scss/spinners';
+@import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/helpers';
+@import 'bootstrap/scss/utilities/api';
+
+// 3. SECTOR custom layers
+@import 'base';
+@import 'layout';
+@import 'components';
