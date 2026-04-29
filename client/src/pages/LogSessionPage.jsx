@@ -99,7 +99,8 @@ export default function LogSessionPage({ cars, presetCarId, onSessionCreated, on
       onToast(`Session committed · ${bestLap}`);
       navigate('/sessions');
     } catch (err) {
-      onToast(err.response?.data?.message || 'Failed to save session.');
+      const validationMessage = err.response?.data?.errors?.[0]?.msg;
+      onToast(validationMessage || err.response?.data?.message || err.message || 'Failed to save session.');
     } finally {
       setSaving(false);
     }

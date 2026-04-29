@@ -30,11 +30,6 @@ export default defineConfig({
             handler: 'CacheFirst',
             options: { cacheName: 'google-fonts-cache', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 } },
           },
-          {
-            urlPattern: /^\/api\/.*/i,
-            handler: 'NetworkFirst',
-            options: { cacheName: 'api-cache', expiration: { maxEntries: 100, maxAgeSeconds: 60 * 5 } },
-          },
         ],
       },
     }),

@@ -15,9 +15,10 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-const handleValidation = (req, res) => {
+const handleValidation = (req, res, label = 'sessions validation error') => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.warn(label, errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
   return null;
@@ -47,7 +48,7 @@ router.get(
   '/:id',
   [param('id').isMongoId().withMessage('Invalid session ID')],
   async (req, res) => {
-    const validationError = handleValidation(req, res);
+    const validationError = handleValidation(req, res, 'GET /sessions/:id validation error:');
     if (validationError !== null) return;
 
     try {
@@ -88,7 +89,7 @@ router.post(
     body('notes').optional().trim().isLength({ max: 2000 }),
   ],
   async (req, res) => {
-    const validationError = handleValidation(req, res);
+    const validationError = handleValidation(req, res, 'POST /sessions validation error:');
     if (validationError !== null) return;
 
     try {
