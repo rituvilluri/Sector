@@ -19,6 +19,22 @@ function makePNG(size) {
     data[i * 4 + 3] = 0xFF;
   }
 
+  // Draw subtle square border so Safari/PWA icons read like the active tab mark.
+  const border = Math.max(2, Math.round(size * 0.012));
+  const inset = Math.round(size * 0.045);
+  for (let y = inset; y < size - inset; y++) {
+    for (let x = inset; x < size - inset; x++) {
+      const onBorder =
+        x < inset + border ||
+        x >= size - inset - border ||
+        y < inset + border ||
+        y >= size - inset - border;
+      if (!onBorder) continue;
+      const idx = (y * size + x) * 4;
+      data[idx] = 0x2A; data[idx + 1] = 0x2A; data[idx + 2] = 0x2A; data[idx + 3] = 0xFF;
+    }
+  }
+
   // Draw gold wave path (sampled)
   const steps = size * 4;
   for (let t = 0; t <= steps; t++) {

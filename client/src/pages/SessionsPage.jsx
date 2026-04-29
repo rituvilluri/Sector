@@ -3,12 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/layout/PageHeader';
 import EmptyState from '../components/ui/EmptyState';
 import { IconPlus, IconSearch, IconChevron, IconStopwatch } from '../components/ui/Icons';
-
-const TRACKS = [
-  'Laguna Seca', 'Road Atlanta', 'Watkins Glen', 'Circuit of the Americas',
-  'Lime Rock Park', 'VIRginia International Raceway', 'Sonoma Raceway',
-  'Sebring International Raceway', 'Mid-Ohio Sports Car Course', 'Barber Motorsports Park',
-];
+import { TRACKS } from '../constants/tracks';
 
 export default function SessionsPage({ sessions, cars, onLogSession }) {
   const [filterCar,   setFilterCar]   = useState('all');

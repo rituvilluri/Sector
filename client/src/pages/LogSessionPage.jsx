@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/layout/PageHeader';
 import { IconPlus, IconClose } from '../components/ui/Icons';
 import { createSession } from '../api/sessions';
-
-const TRACKS = [
-  'Laguna Seca', 'Road Atlanta', 'Watkins Glen', 'Circuit of the Americas',
-  'Lime Rock Park', 'Virginia International Raceway', 'Sonoma Raceway',
-  'Sebring International Raceway', 'Mid-Ohio Sports Car Course', 'Barber Motorsports Park',
-  'Eagles Canyon Raceway', 'Motorsport Ranch 3.1 Mile', 'Motorsport Ranch 1.7 Mile',
-];
+import { TRACKS } from '../constants/tracks';
 
 export default function LogSessionPage({ cars, presetCarId, onSessionCreated, onToast }) {
   const navigate  = useNavigate();

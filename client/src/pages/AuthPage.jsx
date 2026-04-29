@@ -77,7 +77,7 @@ export default function AuthPage() {
       {/* Glass card */}
       <div style={styles.cardWrap}>
         <div className="auth-card fade-up">
-          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 38, paddingBottom: 28 }}>
+          <div style={styles.cardLogo}>
             <SectorLogo size={26} fontSize={15} spacing="0.48em" />
           </div>
 
@@ -93,7 +93,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          <form onSubmit={submit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: '36px 40px 20px' }}>
+          <form onSubmit={submit} noValidate style={styles.form}>
             {serverError && (
               <div style={{ color: 'var(--danger)', fontSize: 12, letterSpacing: '0.04em', padding: '10px 14px', border: '1px solid var(--danger)', background: 'rgba(192,57,43,0.08)' }}>
                 {serverError}
@@ -136,17 +136,18 @@ export default function AuthPage() {
               {submitting ? 'AUTHENTICATING…' : isSignUp ? 'CREATE ACCOUNT' : 'ENTER SECTOR'}
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '4px 0' }}>
+            <div style={styles.divider}>
               <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
               <span style={{ color: 'var(--muted)', fontSize: 10, letterSpacing: '0.3em' }}>OR</span>
               <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
             </div>
-            <button type="button" className="btn btn-google" style={{ width: '100%', height: 48 }} onClick={googleLogin}>
+
+            <button type="button" className="btn btn-google" style={styles.googleButton} onClick={googleLogin}>
               <GoogleG /> {isSignUp ? 'Sign up with Google' : 'Sign in with Google'}
             </button>
           </form>
 
-          <div style={{ padding: '20px 40px 32px', textAlign: 'center', color: 'var(--muted-2)', fontSize: 10, letterSpacing: '0.1em', lineHeight: 1.7 }}>
+          <div style={styles.legal}>
             By continuing you agree to the SECTOR Terms of Service<br />
             and Driver Privacy Notice.
           </div>
@@ -157,7 +158,7 @@ export default function AuthPage() {
 }
 
 const styles = {
-  wrap: { position: 'relative', minHeight: '100vh', width: '100%', overflow: 'hidden', color: 'var(--ivory)' },
+  wrap: { position: 'relative', minHeight: '100svh', width: '100%', overflow: 'hidden', color: 'var(--ivory)' },
   bg: {
     position: 'absolute', inset: 0,
     backgroundImage: 'url("/assets/track-bg.jpeg"), linear-gradient(160deg, #1a1206 0%, #0e0e0e 50%, #080808 100%)',
@@ -172,16 +173,47 @@ const styles = {
   },
   topbar: {
     position: 'relative', display: 'flex', justifyContent: 'space-between',
-    alignItems: 'center', padding: '28px 36px', zIndex: 2,
+    alignItems: 'center', padding: 'clamp(20px, 2.4vh, 28px) 36px', zIndex: 2,
   },
   bottombar: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
     display: 'flex', justifyContent: 'center', alignItems: 'center',
-    gap: 32, padding: '24px 36px', zIndex: 2, flexWrap: 'wrap',
+    gap: 32, padding: 'clamp(16px, 2.2vh, 24px) 36px', zIndex: 2, flexWrap: 'wrap',
   },
   cardWrap: {
     position: 'relative', zIndex: 3, display: 'flex',
     alignItems: 'center', justifyContent: 'center',
-    minHeight: 'calc(100vh - 120px)', padding: '20px',
+    minHeight: 'calc(100svh - clamp(112px, 14vh, 154px))',
+    padding: 'clamp(14px, 2vh, 22px) 20px clamp(66px, 8vh, 86px)',
+  },
+  cardLogo: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: 'clamp(22px, 3vh, 34px)',
+    paddingBottom: 'clamp(18px, 2.4vh, 26px)',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'clamp(14px, 1.8vh, 21px)',
+    padding: 'clamp(24px, 2.8vh, 32px) 40px 16px',
+  },
+  divider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    margin: '0',
+  },
+  googleButton: {
+    width: '100%',
+    height: 44,
+  },
+  legal: {
+    padding: 'clamp(12px, 1.6vh, 18px) 40px clamp(20px, 2.4vh, 28px)',
+    textAlign: 'center',
+    color: 'var(--muted-2)',
+    fontSize: 10,
+    letterSpacing: '0.1em',
+    lineHeight: 1.7,
   },
 };

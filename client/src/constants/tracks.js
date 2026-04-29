@@ -1,0 +1,15 @@
+export const TRACKS = [
+  'Laguna Seca',
+  'Road Atlanta',
+  'Watkins Glen',
+  'Circuit of the Americas',
+  'Lime Rock Park',
+  'Virginia International Raceway',
+  'Sonoma Raceway',
+  'Sebring International Raceway',
+  'Mid-Ohio Sports Car Course',
+  'Barber Motorsports Park',
+  'Eagles Canyon Raceway',
+  'Motorsport Ranch 3.1 Mile',
+  'Motorsport Ranch 1.7 Mile',
+];
