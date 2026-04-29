@@ -61,7 +61,7 @@ function AppShell() {
   }, []);
 
   const handleLogSession = useCallback((carId = null) => {
-    setPresetCarId(carId);
+    setPresetCarId(typeof carId === 'string' ? carId : null);
     navigate('/log');
   }, [navigate]);
 
